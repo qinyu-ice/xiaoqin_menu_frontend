@@ -4,8 +4,8 @@ import Layout from './views/Layout'
 export default function App() {
     return (
         <Routes>
-            <Route path="/" element={<Navigate to="/home" replace/>}/>
-            <Route path="/home" element={<Layout/>}/>
+            <Route path="/" element={<Navigate to="/layout" replace/>}/>
+            <Route path="/layout" element={<Layout/>}/>
         </Routes>
     );
 }
