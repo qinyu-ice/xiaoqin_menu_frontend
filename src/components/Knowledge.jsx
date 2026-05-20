@@ -1,0 +1,7 @@
+export default function knowledge() {
+    return (
+        <>
+            <h1>食物小知识板块</h1>
+        </>
+    )
+}
