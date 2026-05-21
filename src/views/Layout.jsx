@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import {useNavigate} from "react-router-dom";
 import './css/Layout.css';
 import Home from '../components/Home';
 import Kind from '../components/Kind';
@@ -7,6 +8,8 @@ import Snacks from '../components/Snacks';
 import Knowledge from '../components/Knowledge';
 
 export default function Layout() {
+    // 获取 navigate 函数，实现路由跳转
+    const navigate = useNavigate();
     // 记录当前选中的按钮的标识（这里用按钮文字，也可以改用 id/value）
     const [activeKey, setActiveKey] = useState('home')
 
@@ -41,9 +44,31 @@ export default function Layout() {
         }
     }
 
+    const avatarClick = () => {
+        navigate('/userInfo')
+    }
+
+    const login = () => {
+        navigate('/login')
+    }
+
+    const register = () => {
+        navigate('/register')
+    }
+
     return (
         <>
-            <header className="home-header"></header>
+            <header className="home-header">
+                <div className="header-right">
+                    <i className="i" onClick={register}>注册</i>
+                    <i className="i" onClick={login}>登录</i>
+                    <img className="avatar" src="/menu.png" alt="头像" onClick={avatarClick}
+                         onError={(e) => {
+                             e.target.onerror = null;   // 防止循环
+                             e.target.src = 'default-avatar.png';
+                         }}/>
+                </div>
+            </header>
             <nav className="home-nav">
                 {navItems.map((item) => (
                     <button

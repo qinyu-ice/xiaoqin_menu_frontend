@@ -1,11 +1,12 @@
-import './css/Login.css'
+import './css/Register.css'
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 
-export default function Login() {
+export default function Register() {
     // 表单状态
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('');
+    const [rePassword, setRePassword] = useState('')
     const [rememberMe, setRememberMe] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -25,11 +26,19 @@ export default function Login() {
             setError('密码长度至少为6位');
             return false;
         }
+        if (!rePassword.trim()) {
+            setError('请再次输入密码');
+            return false;
+        }
+        if (rePassword !== password) {
+            setError('两次输入的密码不一致');
+            return false;
+        }
         setError('');
         return true;
     };
 
-    // 处理登录提交
+    // 处理注册提交
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validateForm()) return;
@@ -38,8 +47,8 @@ export default function Login() {
         // 模拟 API 请求
         try {
             await new Promise((resolve) => setTimeout(resolve, 1200));
-            // 模拟登录成功逻辑
-            console.log('登录信息:', {username, password, rememberMe});
+            // 模拟注册成功逻辑
+            console.log('注册信息:', {username, password, rePassword, rememberMe});
 
             // 处理“记住我”
             if (rememberMe) {
@@ -49,10 +58,10 @@ export default function Login() {
             }
 
             // 成功提示
-            alert('登录成功！欢迎来到美味食谱世界 🍳');
-            navigate('/');
+            alert('注册成功！');
+            navigate('/login');
         } catch (err) {
-            setError('登录失败，请检查网络或稍后重试');
+            setError('注册失败，请检查网络或稍后重试');
         } finally {
             setLoading(false);
         }
@@ -63,13 +72,13 @@ export default function Login() {
             <div className="login-card">
                 <div className="brand-area">
                     <div className="recipe-icon">🍲</div>
-                    <h1 className="brand-title">小钦菜谱 • 登录</h1>
-                    <p className="brand-slogan">登录，解锁千道家常美味</p>
+                    <h1 className="brand-title">小钦菜谱 • 注册</h1>
+                    <p className="brand-slogan">注册，开启美味人生</p>
                 </div>
                 {/* 错误提示 */}
                 {error && <div className="error-message">{error}</div>}
 
-                {/* 登录表单 */}
+                {/* 注册表单 */}
                 <form onSubmit={handleSubmit} className="login-form">
                     <div className="input-group">
                         <label htmlFor="username">用户名</label>
@@ -103,37 +112,36 @@ export default function Login() {
                         </div>
                     </div>
 
-                    <div className="options-row">
-                        <label className="checkbox-label">
+                    <div className="input-group">
+                        <label htmlFor="rePassword">重复密码</label>
+                        <div className="input-icon">
+                            <span className="icon">🔒</span>
                             <input
-                                type="checkbox"
-                                checked={rememberMe}
-                                onChange={(e) => setRememberMe(e.target.checked)}
+                                type="repassword"
+                                id="rePassword"
+                                placeholder="至少6位字符"
+                                value={rePassword}
+                                onChange={(e) => setRePassword(e.target.value)}
                                 disabled={loading}
+                                autoComplete="current-rePassword"
                             />
-                            <span>记住我</span>
-                        </label>
-                        <a href="#" className="forgot-link" onClick={() => {
-                            alert('已向管理员申请重置密码')
-                        }}>
-                            忘记密码？
-                        </a>
+                        </div>
                     </div>
 
                     <button type="submit" className="login-btn" disabled={loading}>
                         {loading ? (
                             <span className="loader"></span>
                         ) : (
-                            '登录 · 开启食光'
+                            '注册 · 静待美味'
                         )}
                     </button>
                 </form>
                 <div className="register-prompt">
-                    还没有账号？{' '}
+                    已有账号？{' '}
                     <a href="#" onClick={() => {
-                        navigate('/register')
+                        navigate('/login');
                     }}>
-                        立即注册
+                        返回登录
                     </a>
                 </div>
 
