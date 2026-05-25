@@ -1,17 +1,16 @@
 import './css/Login.css'
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 export default function Login() {
-    // 表单状态
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const navigate = useNavigate();
 
-    // 表单验证
     const validateForm = () => {
         if (!username.trim()) {
             setError('请输入用户名');
@@ -26,38 +25,70 @@ export default function Login() {
             return false;
         }
         setError('');
+        setSuccess('');
         return true;
     };
 
-    // 处理登录提交
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validateForm()) return;
 
         setLoading(true);
-        // 模拟 API 请求
+        setError('');
+        setSuccess('');
+
         try {
-            await new Promise((resolve) => setTimeout(resolve, 1200));
-            // 模拟登录成功逻辑
-            console.log('登录信息:', {username, password, rememberMe});
-
-            // 处理“记住我”
-            if (rememberMe) {
-                localStorage.setItem('recipe_username', username);
-            } else {
-                localStorage.removeItem('recipe_username');
+            const name = username;
+            const response = await axios.post('/user/login', {name, password});
+            const {token} = response.data.data;
+            localStorage.setItem('token', token);
+            setError(response.data.msg);
+            if (response.data.data.id) {
+                setSuccess(response.data.msg);
+                navigate('/');
             }
-
-            // 成功提示
-            alert('登录成功！欢迎来到美味食谱世界 🍳');
-            navigate('/');
         } catch (err) {
-            setError('登录失败，请检查网络或稍后重试');
+            console.error('请求异常:', err);
+            if (err.response) {
+                setError(err.response.data?.msg || `服务器错误：${err.response.status}`);
+            } else if (err.request) {
+                setError('无法连接到服务器，请检查网络或后端服务');
+            } else {
+                setError('登录失败，请稍后重试');
+            }
         } finally {
             setLoading(false);
         }
     };
 
+    const applyResetPassword = async () => {
+        if (!username.trim()) {
+            setError('请输入用户名');
+            return;
+        }
+
+        setError('');
+        setSuccess('');
+
+        try {
+            const response = await axios.post('/user/apply/reset/password', null, {params: {name: username}});
+            setSuccess(response.data.msg);
+            if (response.data.data !== null) {
+                setError(response.data.msg);
+            }
+        } catch (err) {
+            console.error('请求异常:', err);
+            if (err.response) {
+                setError(err.response.data?.msg || `服务器错误：${err.response.status}`);
+            } else if (err.request) {
+                setError('无法连接到服务器，请检查网络或后端服务');
+            } else {
+                setError('申请重置密码失败，请稍后重试');
+            }
+        }
+    };
+
+    // 注意：组件的 return 必须放在最外层，不能写在其他函数里面
     return (
         <div className="login-container">
             <div className="login-card">
@@ -66,17 +97,17 @@ export default function Login() {
                     <h1 className="brand-title">小钦菜谱 • 登录</h1>
                     <p className="brand-slogan">登录，解锁千道家常美味</p>
                 </div>
-                {/* 错误提示 */}
-                {error && <div className="error-message">{error}</div>}
 
-                {/* 登录表单 */}
+                {error && <div className="error-message">{error}</div>}
+                {success && <div className="success-message">{success}</div>}
+
                 <form onSubmit={handleSubmit} className="login-form">
                     <div className="input-group">
                         <label htmlFor="username">用户名</label>
                         <div className="input-icon">
                             <span className="icon">👤</span>
                             <input
-                                type="username"
+                                type="text"          // 修正：应为 text，不是 username
                                 id="username"
                                 placeholder="你的用户名"
                                 value={username}
@@ -104,40 +135,27 @@ export default function Login() {
                     </div>
 
                     <div className="options-row">
-                        <label className="checkbox-label">
-                            <input
-                                type="checkbox"
-                                checked={rememberMe}
-                                onChange={(e) => setRememberMe(e.target.checked)}
-                                disabled={loading}
-                            />
-                            <span>记住我</span>
-                        </label>
-                        <a href="#" className="forgot-link" onClick={() => {
-                            alert('已向管理员申请重置密码')
-                        }}>
+                        <div></div>
+                        <a href="#" className="forgot-link" onClick={applyResetPassword}>
                             忘记密码？
                         </a>
                     </div>
 
                     <button type="submit" className="login-btn" disabled={loading}>
-                        {loading ? (
-                            <span className="loader"></span>
-                        ) : (
-                            '登录 · 开启食光'
-                        )}
+                        {loading ? <span className="loader"></span> : '登录 · 开启食光'}
                     </button>
                 </form>
+
                 <div className="register-prompt">
                     还没有账号？{' '}
-                    <a href="#" onClick={() => {
-                        navigate('/register')
+                    <a href="#" onClick={(e) => {
+                        e.preventDefault();
+                        navigate('/register');
                     }}>
                         立即注册
                     </a>
                 </div>
 
-                {/* 装饰性食材元素 */}
                 <div className="food-deco deco-1">🍕</div>
                 <div className="food-deco deco-2">🍅</div>
                 <div className="food-deco deco-3">🍄‍🟫</div>

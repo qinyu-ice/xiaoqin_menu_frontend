@@ -1,7 +1,11 @@
+import './css/Home.css'
+
 export default function Home() {
     return (
         <>
-            <h1>首页板块</h1>
+            <header className="header">
+                <img alt="首页导航图"/>
+            </header>
         </>
     )
 }

@@ -74,7 +74,18 @@
     font-size: 0.85rem;
     margin-bottom: 1.5rem;
     text-align: center;
-    /*border-left: 4px solid #e35f21;*/
+    font-weight: 500;
+}
+
+/* 正确消息 */
+.success-message {
+    background-color: #e6f4ea;
+    color: #2b5e2b;
+    padding: 0.7rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
     font-weight: 500;
 }
 
@@ -140,26 +151,10 @@
 /* 选项行 */
 .options-row {
     display: flex;
-    justify-content: space-between;
+    justify-content: right;
     align-items: center;
     font-size: 0.85rem;
     margin: 0.2rem 0 0.2rem;
-}
-
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    color: #6b4c2c;
-    font-weight: 500;
-}
-
-.checkbox-label input {
-    width: 1rem;
-    height: 1rem;
-    accent-color: #e6822e;
-    cursor: pointer;
 }
 
 .forgot-link {
