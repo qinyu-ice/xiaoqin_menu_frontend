@@ -38,24 +38,19 @@ export default function Login() {
         setSuccess('');
 
         try {
-            const name = username;
-            const response = await axios.post('/user/login', {name, password});
-            const {token} = response.data.data;
-            localStorage.setItem('token', token);
-            setError(response.data.msg);
-            if (response.data.data.id) {
-                setSuccess(response.data.msg);
-                navigate('/');
+            const response = await axios.post('/user/login', {name: username, password});
+            if (response.data.code === 200) {
+                if (response.data.msg.includes('登录成功')) {
+                    const {token} = response.data.data;
+                    localStorage.setItem('token', token);
+                    setSuccess(response.data.msg);
+                    navigate('/');
+                } else {
+                    setError(response.data.msg);
+                }
             }
         } catch (err) {
-            console.error('请求异常:', err);
-            if (err.response) {
-                setError(err.response.data?.msg || `服务器错误：${err.response.status}`);
-            } else if (err.request) {
-                setError('无法连接到服务器，请检查网络或后端服务');
-            } else {
-                setError('登录失败，请稍后重试');
-            }
+            setError('登录失败，请检查网络或者稍后重试');
         } finally {
             setLoading(false);
         }
@@ -72,23 +67,18 @@ export default function Login() {
 
         try {
             const response = await axios.post('/user/apply/reset/password', null, {params: {name: username}});
-            setSuccess(response.data.msg);
-            if (response.data.data !== null) {
-                setError(response.data.msg);
+            if (response.data.code === 200) {
+                if (response.data.msg.includes('申请重置密码成功')) {
+                    setSuccess(response.data.msg);
+                } else {
+                    setError(response.data.msg);
+                }
             }
         } catch (err) {
-            console.error('请求异常:', err);
-            if (err.response) {
-                setError(err.response.data?.msg || `服务器错误：${err.response.status}`);
-            } else if (err.request) {
-                setError('无法连接到服务器，请检查网络或后端服务');
-            } else {
-                setError('申请重置密码失败，请稍后重试');
-            }
+            setError('申请重置密码失败，请检查网络或者稍后重试');
         }
     };
 
-    // 注意：组件的 return 必须放在最外层，不能写在其他函数里面
     return (
         <div className="login-container">
             <div className="login-card">
@@ -107,13 +97,12 @@ export default function Login() {
                         <div className="input-icon">
                             <span className="icon">👤</span>
                             <input
-                                type="text"          // 修正：应为 text，不是 username
+                                type="text"
                                 id="username"
                                 placeholder="你的用户名"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 disabled={loading}
-                                autoComplete="username"
                             />
                         </div>
                     </div>
@@ -129,7 +118,6 @@ export default function Login() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 disabled={loading}
-                                autoComplete="current-password"
                             />
                         </div>
                     </div>

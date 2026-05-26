@@ -74,7 +74,18 @@
     font-size: 0.85rem;
     margin-bottom: 1.5rem;
     text-align: center;
-    /*border-left: 4px solid #e35f21;*/
+    font-weight: 500;
+}
+
+/* 正确消息 */
+.success-message {
+    background-color: #e6f4ea;
+    color: #2b5e2b;
+    padding: 0.7rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
     font-weight: 500;
 }
 
