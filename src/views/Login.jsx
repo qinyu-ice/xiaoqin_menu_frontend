@@ -2,30 +2,27 @@ import './css/Login.css'
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
+import {message} from 'antd';
 
 export default function Login() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
     const navigate = useNavigate();
 
     const validateForm = () => {
         if (!username.trim()) {
-            setError('请输入用户名');
+            message.error('请输入用户名');
             return false;
         }
         if (!password.trim()) {
-            setError('请输入密码');
+            message.error('请输入密码');
             return false;
         }
         if (password.length < 6) {
-            setError('密码长度至少为6位');
+            message.error('密码长度至少为6位');
             return false;
         }
-        setError('');
-        setSuccess('');
         return true;
     };
 
@@ -34,23 +31,24 @@ export default function Login() {
         if (!validateForm()) return;
 
         setLoading(true);
-        setError('');
-        setSuccess('');
 
         try {
             const response = await axios.post('/user/login', {name: username, password});
             if (response.data.code === 200) {
                 if (response.data.msg.includes('登录成功')) {
-                    const {token} = response.data.data;
+                    const {token, id, avatar} = response.data.data;
                     localStorage.setItem('token', token);
-                    setSuccess(response.data.msg);
+                    localStorage.setItem('userId', id);
+                    localStorage.setItem('avatar', avatar);
+                    message.success(response.data.msg);
                     navigate('/');
                 } else {
-                    setError(response.data.msg);
+                    message.error(response.data.msg);
                 }
             }
         } catch (err) {
-            setError('登录失败，请检查网络或者稍后重试');
+            console.log(err);
+            message.error('登录失败，请检查网络或者稍后重试');
         } finally {
             setLoading(false);
         }
@@ -58,24 +56,22 @@ export default function Login() {
 
     const applyResetPassword = async () => {
         if (!username.trim()) {
-            setError('请输入用户名');
+            message.error('请输入用户名');
             return;
         }
-
-        setError('');
-        setSuccess('');
 
         try {
             const response = await axios.post('/user/apply/reset/password', null, {params: {name: username}});
             if (response.data.code === 200) {
                 if (response.data.msg.includes('申请重置密码成功')) {
-                    setSuccess(response.data.msg);
+                    message.success(response.data.msg);
                 } else {
-                    setError(response.data.msg);
+                    message.error(response.data.msg);
                 }
             }
         } catch (err) {
-            setError('申请重置密码失败，请检查网络或者稍后重试');
+            console.log(err);
+            message.error('申请重置密码失败，请检查网络或者稍后重试');
         }
     };
 
@@ -87,9 +83,6 @@ export default function Login() {
                     <h1 className="brand-title">小钦菜谱 • 登录</h1>
                     <p className="brand-slogan">登录，解锁千道家常美味</p>
                 </div>
-
-                {error && <div className="error-message">{error}</div>}
-                {success && <div className="success-message">{success}</div>}
 
                 <form onSubmit={handleSubmit} className="login-form">
                     <div className="input-group">

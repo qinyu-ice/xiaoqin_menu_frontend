@@ -65,30 +65,6 @@
     font-weight: 500;
 }
 
-/* 错误信息 */
-.error-message {
-    background-color: #ffeeea;
-    color: #c73e1d;
-    padding: 0.7rem 1rem;
-    border-radius: 2rem;
-    font-size: 0.85rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    font-weight: 500;
-}
-
-/* 正确消息 */
-.success-message {
-    background-color: #e6f4ea;
-    color: #2b5e2b;
-    padding: 0.7rem 1rem;
-    border-radius: 2rem;
-    font-size: 0.85rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    font-weight: 500;
-}
-
 /* 表单样式 */
 .login-form {
     display: flex;

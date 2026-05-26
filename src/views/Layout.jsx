@@ -1,17 +1,20 @@
-import {useState} from 'react';
-import {useNavigate} from "react-router-dom";
+import {useState, useEffect} from 'react';
+import {useNavigate, useLocation} from "react-router-dom";
 import './css/Layout.css';
 import Home from '../components/Home';
 import Kind from '../components/Kind';
 import Menu from '../components/Menu';
 import Snacks from '../components/Snacks';
 import Knowledge from '../components/Knowledge';
+import axios from "axios";
+import {Avatar, Button, message} from "antd";
 
 export default function Layout() {
     // 获取 navigate 函数，实现路由跳转
     const navigate = useNavigate();
     // 记录当前选中的按钮的标识（这里用按钮文字，也可以改用 id/value）
-    const [activeKey, setActiveKey] = useState('home')
+    const [activeKey, setActiveKey] = useState('home');
+    const [status, setStatus] = useState(true);
 
     // 按钮列表数据，方便维护
     const navItems = [
@@ -45,7 +48,11 @@ export default function Layout() {
     }
 
     const avatarClick = () => {
-        navigate('/userInfo')
+        if (status) {
+            navigate('/login')
+        }else{
+            navigate('/userInfo')
+        }
     }
 
     const login = () => {
@@ -56,17 +63,59 @@ export default function Layout() {
         navigate('/register')
     }
 
+    const switchAccount = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('avatar');
+        setStatus(true);
+        navigate('/login')
+    }
+
+    const isLogin = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`/user/status`, {
+                headers: {'Authorization': `Bearer ${token}`}
+            })
+            if (response.data.code === 200 && response.data.data) {
+                setStatus(false);
+            }
+            if (response.data.code === 200 && !response.data.data) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('avatar');
+            }
+        } catch (err) {
+            console.log(err);
+            message.error('获取用户状态失败，请检查网络或者稍后重试');
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('avatar');
+            setStatus(true);
+        }
+    }
+
+    const location = useLocation();
+    useEffect(() => {
+        isLogin();
+    }, [location]);
+
     return (
         <>
             <header className="home-header">
                 <div className="header-right">
-                    <i className="i" onClick={register}>注册</i>
-                    <i className="i" onClick={login}>登录</i>
-                    <img className="avatar" src="/menu.png" alt="头像" onClick={avatarClick}
-                         onError={(e) => {
-                             e.target.onerror = null;   // 防止循环
-                             e.target.src = 'default-avatar.png';
-                         }}/>
+
+                    {status ? (
+                        <>
+                            <i className="i" onClick={register}>注册</i>
+                            <i className="i" onClick={login}>登录</i>
+                        </>
+                    ) : (
+                        <i className="switch-i" onClick={switchAccount}>切换账号</i>
+                    )}
+
+                    <Avatar className="avatar" src={localStorage.getItem('avatar') || '/default-avatar.png'}
+                            alt="头像" onClick={avatarClick}/>
                 </div>
             </header>
             <nav className="home-nav">
