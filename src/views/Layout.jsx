@@ -50,7 +50,7 @@ export default function Layout() {
     const avatarClick = () => {
         if (status) {
             navigate('/login')
-        }else{
+        } else {
             navigate('/userInfo')
         }
     }
@@ -64,11 +64,36 @@ export default function Layout() {
     }
 
     const switchAccount = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        localStorage.removeItem('avatar');
-        setStatus(true);
         navigate('/login')
+        setStatus(true);
+    }
+
+    const exitAccount = async () => {
+        try {
+            const userId = localStorage.getItem('userId');
+            const token = localStorage.getItem('token');
+            const response = await axios.get(
+                '/user/exit',
+                {
+                    params: {id: userId},
+                    headers: {'Authorization': `Bearer ${token}`}
+                }
+            )
+            if (response.data.code === 200) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('avatar');
+                setStatus(true);
+                message.success(response.data.msg);
+                navigate('/login')
+            } else {
+                setStatus(false);
+                message.error(response.data.msg);
+            }
+        } catch (err) {
+            console.log(err)
+            message.error('退出登录失败，请检查网络或者稍后重试')
+        }
     }
 
     const isLogin = async () => {
@@ -91,7 +116,6 @@ export default function Layout() {
             localStorage.removeItem('token');
             localStorage.removeItem('userId');
             localStorage.removeItem('avatar');
-            setStatus(true);
         }
     }
 
@@ -111,7 +135,10 @@ export default function Layout() {
                             <i className="i" onClick={login}>登录</i>
                         </>
                     ) : (
-                        <i className="switch-i" onClick={switchAccount}>切换账号</i>
+                        <>
+                            <i className="switch-i" onClick={switchAccount}>切换账号</i>
+                            <i className="switch-i" onClick={exitAccount}>退出登录</i>
+                        </>
                     )}
 
                     <Avatar className="avatar" src={localStorage.getItem('avatar') || '/default-avatar.png'}

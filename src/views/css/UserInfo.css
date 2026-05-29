@@ -1,43 +1,49 @@
-.info-container {
-    margin-top: 10vh;
+.user-info-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #f0f2f5;
+    padding: 24px;
+}
+
+.user-info-card {
+    max-width: 1000px;
+    width: 100%;
+    border-radius: 24px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.avatar-hover {
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.avatar-hover:hover {
+    opacity: 0.85;
+    border-color: #1890ff;
+}
+
+.permission-badge {
+    margin-top: 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.table-container {
-    width: 20%;
-    margin: 5vh auto;
-    background-color: #eadbc6;
+.permission-tag {
+    font-size: 18px !important;
+    padding: 6px 18px !important;
 }
 
-/* 统一所有表格相关背景 */
-.table-container,
-.table-container .ant-table,
-.table-container .ant-table-container,
-.table-container .ant-table-content {
-    background-color: #eadbc6;
+.action-buttons {
+    margin-top: 24px;
+    text-align: right;
 }
 
-/* 表头+表身：无边框、透明背景 */
-.table-container .ant-table-thead > tr > th,
-.table-container .ant-table-tbody > tr > td {
-    background-color: transparent;
-    border: none;
-}
-
-/* 单独去除表头底部边框（可选） */
-.table-container .ant-table-thead > tr > th {
-    border-bottom: none;
-}
-
-/* 悬停时保持背景不变 */
-.table-container .ant-table-tbody > tr:hover > td,
-.table-container .ant-table-tbody > tr.ant-table-row:hover > td {
-    background-color: #eadbc6 !important;
-}
-
-/* 整个表格文字颜色 */
-.table-container .ant-table {
-    color: #ff5722;
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .action-buttons {
+        text-align: center;
+    }
 }
