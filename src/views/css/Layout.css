@@ -29,12 +29,13 @@
         width: 3vw;
         padding-top: 15px;
         font-size: 18px;
+        color: #a52a2a;
         transition: transform 0.3s ease;
     }
 
     .i:hover {
         cursor: pointer;
-        transform: scale(1.1);
+        transform: scale(1.2);
         transition: transform 0.3s ease;
     }
 
@@ -42,12 +43,13 @@
         width: 5.5vw;
         padding-top: 15px;
         font-size: 18px;
+        color: #a52a2a;
         transition: transform 0.3s ease;
     }
 
     .switch-i:hover {
         cursor: pointer;
-        transform: scale(1.1);
+        transform: scale(1.2);
         transition: transform 0.3s ease;
     }
 }

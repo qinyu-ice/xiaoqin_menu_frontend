@@ -96,6 +96,7 @@ export default function Login() {
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 disabled={loading}
+                                style={{height: "40px", boxSizing: 'border-box'}}
                             />
                         </div>
                     </div>
@@ -111,6 +112,7 @@ export default function Login() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 disabled={loading}
+                                style={{height: "40px", boxSizing: 'border-box'}}
                             />
                         </div>
                     </div>

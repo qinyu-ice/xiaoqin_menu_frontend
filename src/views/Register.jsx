@@ -1,4 +1,4 @@
-import './css/Register.css'
+import './css/Login.css'
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
@@ -82,6 +82,7 @@ export default function Register() {
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 disabled={loading}
+                                style={{height: "40px", boxSizing: 'border-box'}}
                             />
                         </div>
                     </div>
@@ -97,6 +98,7 @@ export default function Register() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 disabled={loading}
+                                style={{height: "40px", boxSizing: 'border-box'}}
                             />
                         </div>
                     </div>
@@ -112,6 +114,7 @@ export default function Register() {
                                 value={rePassword}
                                 onChange={(e) => setRePassword(e.target.value)}
                                 disabled={loading}
+                                style={{height: "40px", boxSizing: 'border-box'}}
                             />
                         </div>
                     </div>

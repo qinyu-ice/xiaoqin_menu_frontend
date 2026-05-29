@@ -3,7 +3,7 @@ import axios from 'axios';
 import {
     Avatar, Button, message, Descriptions, Card, Modal, Form, Input, Upload, Row, Col, Tag, Skeleton
 } from 'antd';
-import {UserOutlined, MailOutlined, PhoneOutlined, EditOutlined, UploadOutlined, HomeOutlined} from '@ant-design/icons';
+import {UserOutlined, EditOutlined, UploadOutlined, HomeOutlined} from '@ant-design/icons';
 import React, {useState, useEffect} from 'react';
 import {useNavigate} from "react-router-dom";
 
@@ -105,6 +105,7 @@ export default function UserInfo() {
                 setUserInfo(prev => ({...prev, ...values, avatar: finalAvatar}));
                 setEditModalVisible(false);
                 setNewAvatarUrl('');            // 清理临时头像 URL
+                localStorage.setItem('avatar', finalAvatar);
                 editForm.resetFields();         // 重置表单
             } else {
                 message.error(response.data.msg || '更新失败');
